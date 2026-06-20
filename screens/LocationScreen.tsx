@@ -1,13 +1,69 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
+import { WebView } from "react-native-webview";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../components/Header";
 import SegmentedControl from "../components/SegmentedControl";
+import MenuRow from "../components/MenuRow";
 import { colors } from "../components/theme";
 
 type Props = {
   onOpenFilters: () => void;
 };
+
+const mapHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      background: #000;
+    }
+    .leaflet-control-attribution {
+      display: none;
+    }
+    .marker {
+      width: 34px;
+      height: 34px;
+      background: #F4D83D;
+      border: 5px solid #111;
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([41.3275, 19.8187], 13);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19
+    }).addTo(map);
+
+    const icon = L.divIcon({
+      className: '',
+      html: '<div class="marker"></div>',
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+
+    L.marker([41.3275, 19.8187], { icon }).addTo(map);
+    L.marker([41.3180, 19.8210], { icon }).addTo(map);
+    L.marker([41.3350, 19.8100], { icon }).addTo(map);
+  </script>
+</body>
+</html>
+`;
 
 export default function LocationsScreen({ onOpenFilters }: Props) {
   const [tab, setTab] = useState<"left" | "right">("left");
@@ -23,15 +79,14 @@ export default function LocationsScreen({ onOpenFilters }: Props) {
       <SegmentedControl left="Map" right="List" active={tab} onChange={setTab} />
 
       {tab === "left" ? (
-        <View style={styles.fakeMap}>
-          <Text style={styles.mapCity}>Tirana</Text>
-          <Text style={styles.mapCountry}>ALBANIA</Text>
-
-          <View style={styles.locationDot} />
-
-          <View style={styles.roadOne} />
-          <View style={styles.roadTwo} />
-          <View style={styles.roadThree} />
+        <View style={styles.mapContainer}>
+          <WebView
+            originWhitelist={["*"]}
+            source={{ html: mapHtml }}
+            style={styles.webMap}
+            javaScriptEnabled
+            domStorageEnabled
+          />
 
           <View style={styles.mapButtonTop}>
             <Ionicons name="navigate" size={30} color="#000" />
@@ -42,8 +97,13 @@ export default function LocationsScreen({ onOpenFilters }: Props) {
           </View>
         </View>
       ) : (
-        <View style={styles.empty}>
-          <Text style={styles.emptyText}>No locations to display</Text>
+        <View style={styles.listContainer}>
+          <Text style={styles.listTitle}>Nearby locations</Text>
+
+          <MenuRow title="Raiffeisen Bank - Tirana Center" icon="bank-outline" />
+          <MenuRow title="ATM - Blloku" icon="cash-multiple" />
+          <MenuRow title="Branch - Skanderbeg Square" icon="office-building-marker" />
+          <MenuRow title="ATM - New Bazaar" icon="credit-card-outline" />
         </View>
       )}
     </View>
@@ -51,9 +111,9 @@ export default function LocationsScreen({ onOpenFilters }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: colors.bg 
+  container: {
+    flex: 1,
+    backgroundColor: colors.bg,
   },
 
   filterBtn: {
@@ -68,76 +128,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#2A2A2A",
-    zIndex: 10,
+    zIndex: 20,
   },
 
-  fakeMap: {
+  mapContainer: {
     flex: 1,
     marginBottom: 100,
-    backgroundColor: "#24574D",
-    position: "relative",
+    backgroundColor: "#000",
     overflow: "hidden",
   },
 
-  mapCity: {
-    position: "absolute",
-    top: 170,
-    left: 145,
-    color: "#E5E5E5",
-    fontSize: 28,
-    fontWeight: "800",
-  },
-
-  mapCountry: {
-    position: "absolute",
-    top: 260,
-    left: 150,
-    color: "#BDBDBD",
-    fontSize: 22,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-
-  locationDot: {
-    position: "absolute",
-    top: 190,
-    left: 135,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.yellow,
-    borderWidth: 5,
-    borderColor: "#DADADA",
-  },
-
-  roadOne: {
-    position: "absolute",
-    top: 210,
-    left: -60,
-    width: 520,
-    height: 3,
-    backgroundColor: "rgba(210,210,210,0.35)",
-    transform: [{ rotate: "-25deg" }],
-  },
-
-  roadTwo: {
-    position: "absolute",
-    top: 420,
-    left: -40,
-    width: 520,
-    height: 3,
-    backgroundColor: "rgba(210,210,210,0.3)",
-    transform: [{ rotate: "18deg" }],
-  },
-
-  roadThree: {
-    position: "absolute",
-    top: 110,
-    left: 190,
-    width: 3,
-    height: 700,
-    backgroundColor: "rgba(210,210,210,0.22)",
-    transform: [{ rotate: "12deg" }],
+  webMap: {
+    flex: 1,
+    backgroundColor: "#000",
   },
 
   mapButtonTop: {
@@ -152,6 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 5,
     borderColor: "#000",
+    zIndex: 10,
   },
 
   mapButtonBottom: {
@@ -166,17 +170,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 5,
     borderColor: "#000",
+    zIndex: 10,
   },
 
-  empty: {
+  listContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 10,
     paddingBottom: 120,
+    backgroundColor: colors.bg,
   },
 
-  emptyText: { 
-    color: colors.white, 
-    fontSize: 22 
+  listTitle: {
+    color: colors.white,
+    fontSize: 24,
+    fontWeight: "800",
+    paddingHorizontal: 22,
+    paddingVertical: 18,
   },
 });
