@@ -17,8 +17,14 @@
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
     "react-native": "0.81.5",
+<<<<<<< HEAD
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0"
+=======
+    "react-native-safe-area-context": "^5.8.0",
+    "react-native-screens": "^4.25.2",
+    "react-native-webview": "13.15.0"
+>>>>>>> 247242bc8f0f01ef9cd555b74bb47b08f5d7aaa2
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
