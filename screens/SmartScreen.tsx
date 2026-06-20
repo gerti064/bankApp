@@ -1,109 +1,195 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import Header from "../components/Header";
 import { colors, radius } from "../components/theme";
-import { Ionicons } from "@expo/vector-icons";
+import { RootStackParamList } from "../navigationTypes";
+
+type NavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
+type FeatureScreen =
+  | "SavingPlan"
+  | "TripBalance"
+  | "BillSplit"
+  | "MoneyWrapped"
+  | "FinancialCoach";
+
+type SmartFeature = {
+  id: number;
+  title: string;
+  subtitle: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  screen: FeatureScreen;
+};
+
+const smartFeatures: SmartFeature[] = [
+  {
+    id: 1,
+    title: "Saving Plans",
+    subtitle:
+      "Create a goal and move money from your current balance into savings.",
+    icon: "wallet-outline",
+    screen: "SavingPlan",
+  },
+  {
+    id: 2,
+    title: "Trip Spend Balance",
+    subtitle:
+      "Create a temporary shared trip card and manage money with friends.",
+    icon: "airplane-outline",
+    screen: "TripBalance",
+  },
+  {
+    id: 3,
+    title: "Smart AI Balance Split",
+    subtitle:
+      "Scan restaurant bills and split payments between multiple people.",
+    icon: "receipt-outline",
+    screen: "BillSplit",
+  },
+  {
+    id: 4,
+    title: "Monthly Money Wrapped",
+    subtitle:
+      "View your monthly spending and saving information as a slideshow.",
+    icon: "stats-chart-outline",
+    screen: "MoneyWrapped",
+  },
+  {
+    id: 5,
+    title: "AI Financial Coach",
+    subtitle:
+      "Get personalized advice based on your current balance and goals.",
+    icon: "sparkles-outline",
+    screen: "FinancialCoach",
+  },
+];
 
 export default function SmartScreen() {
+  const navigation = useNavigation<NavigationProp>();
+
   return (
     <View style={styles.container}>
-      <Header title="Smart" />
+      <Header title="Smart Banking" />
 
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heroCard}>
-          <Ionicons name="sparkles" size={36} color={colors.yellow} />
+          <View style={styles.heroIcon}>
+            <Ionicons
+              name="sparkles"
+              size={30}
+              color="#111111"
+            />
+          </View>
 
           <Text style={styles.heroTitle}>
-            AI Financial Assistant
+            Your Smart Money Center
           </Text>
 
           <Text style={styles.heroText}>
-            Based on your spending habits, you could save
-            €120 this month by reducing food delivery expenses.
-          </Text>
-        </View>
-
-        <View style={styles.card}>
-          <Ionicons
-            name="pie-chart"
-            size={28}
-            color={colors.yellow}
-          />
-
-          <Text style={styles.cardTitle}>
-            Spending Analysis
+            Save for important goals, manage trips with friends,
+            split bills and receive personalized financial guidance.
           </Text>
 
-          <Text style={styles.cardText}>
-            Most spending this month:
-          </Text>
+          <View style={styles.heroStats}>
+            <View style={styles.heroStat}>
+              <Text style={styles.heroStatValue}>
+                €3,250
+              </Text>
 
-          <Text style={styles.highlight}>
-            Food & Dining — €247
-          </Text>
-        </View>
+              <Text style={styles.heroStatLabel}>
+                Available
+              </Text>
+            </View>
 
-        <View style={styles.card}>
-          <Ionicons
-            name="wallet"
-            size={28}
-            color={colors.yellow}
-          />
+            <View style={styles.statDivider} />
 
-          <Text style={styles.cardTitle}>
-            Savings Goal
-          </Text>
+            <View style={styles.heroStat}>
+              <Text style={styles.heroStatValue}>
+                €1,290
+              </Text>
 
-          <Text style={styles.cardText}>
-            New Laptop Fund
-          </Text>
+              <Text style={styles.heroStatLabel}>
+                Saved
+              </Text>
+            </View>
 
-          <View style={styles.progressTrack}>
-            <View style={styles.progressFill} />
+            <View style={styles.statDivider} />
+
+            <View style={styles.heroStat}>
+              <Text style={styles.heroStatValue}>
+                18
+              </Text>
+
+              <Text style={styles.heroStatLabel}>
+                Day streak
+              </Text>
+            </View>
           </View>
+        </View>
 
-          <Text style={styles.highlight}>
-            €850 / €1500
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>
+            Smart Features
+          </Text>
+
+          <Text style={styles.sectionSubtitle}>
+            Press a feature to open it
           </Text>
         </View>
 
-        <View style={styles.card}>
-          <Ionicons
-            name="shield-checkmark"
-            size={28}
-            color={colors.yellow}
-          />
+        {smartFeatures.map((feature) => (
+          <Pressable
+            key={feature.id}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed,
+            ]}
+            onPress={() =>
+              navigation.navigate(feature.screen)
+            }
+          >
+            <View style={styles.featureIcon}>
+              <Ionicons
+                name={feature.icon}
+                size={27}
+                color={colors.yellow}
+              />
+            </View>
 
-          <Text style={styles.cardTitle}>
-            Fraud Detection
-          </Text>
+            <View style={styles.featureInformation}>
+              <Text style={styles.featureTitle}>
+                {feature.title}
+              </Text>
 
-          <Text style={styles.cardText}>
-            No suspicious transactions detected.
-          </Text>
-        </View>
+              <Text style={styles.featureSubtitle}>
+                {feature.subtitle}
+              </Text>
+            </View>
 
-        <View style={styles.card}>
-          <Ionicons
-            name="repeat"
-            size={28}
-            color={colors.yellow}
-          />
-
-          <Text style={styles.cardTitle}>
-            Subscription Tracker
-          </Text>
-
-          <Text style={styles.cardText}>
-            Active subscriptions:
-          </Text>
-
-          <Text style={styles.highlight}>
-            Netflix • Spotify • iCloud+
-          </Text>
-        </View>
+            <View style={styles.arrowBox}>
+              <Ionicons
+                name="chevron-forward"
+                size={21}
+                color={colors.white}
+              />
+            </View>
+          </Pressable>
+        ))}
       </ScrollView>
     </View>
   );
@@ -117,8 +203,7 @@ const styles = StyleSheet.create({
 
   content: {
     padding: 18,
-    paddingBottom: 120,
-    gap: 16,
+    paddingBottom: 130,
   },
 
   heroCard: {
@@ -126,62 +211,131 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: 22,
     borderWidth: 1,
-    borderColor: "#2A2A2A",
+    borderColor: colors.border,
+  },
+
+  heroIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.yellow,
   },
 
   heroTitle: {
     color: colors.white,
-    fontSize: 24,
-    fontWeight: "800",
-    marginTop: 12,
-    marginBottom: 10,
+    fontSize: 25,
+    fontWeight: "900",
+    marginTop: 16,
   },
 
   heroText: {
-    color: colors.white,
-    fontSize: 16,
-    lineHeight: 24,
+    color: "#C9C9C9",
+    fontSize: 15,
+    lineHeight: 23,
+    marginTop: 9,
   },
 
-  card: {
+  heroStats: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 22,
+    paddingTop: 18,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+
+  heroStat: {
+    flex: 1,
+    alignItems: "center",
+  },
+
+  heroStatValue: {
+    color: colors.yellow,
+    fontSize: 17,
+    fontWeight: "900",
+  },
+
+  heroStatLabel: {
+    color: colors.muted,
+    fontSize: 11,
+    marginTop: 4,
+  },
+
+  statDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: colors.border,
+  },
+
+  sectionHeader: {
+    marginTop: 28,
+    marginBottom: 14,
+  },
+
+  sectionTitle: {
+    color: colors.white,
+    fontSize: 21,
+    fontWeight: "900",
+  },
+
+  sectionSubtitle: {
+    color: colors.muted,
+    fontSize: 13,
+    marginTop: 4,
+  },
+
+  featureCard: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.card,
     borderRadius: radius.md,
-    padding: 20,
+    padding: 16,
     borderWidth: 1,
-    borderColor: "#2A2A2A",
+    borderColor: colors.border,
+    marginBottom: 13,
   },
 
-  cardTitle: {
+  featureCardPressed: {
+    opacity: 0.72,
+    transform: [{ scale: 0.99 }],
+  },
+
+  featureIcon: {
+    width: 54,
+    height: 54,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#292715",
+  },
+
+  featureInformation: {
+    flex: 1,
+    marginLeft: 14,
+    marginRight: 10,
+  },
+
+  featureTitle: {
     color: colors.white,
-    fontSize: 20,
-    fontWeight: "700",
-    marginTop: 10,
-    marginBottom: 10,
+    fontSize: 17,
+    fontWeight: "800",
   },
 
-  cardText: {
-    color: "#CFCFCF",
-    fontSize: 16,
+  featureSubtitle: {
+    color: "#AFAFAF",
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 5,
   },
 
-  highlight: {
-    color: colors.yellow,
-    fontSize: 18,
-    fontWeight: "700",
-    marginTop: 10,
-  },
-
-  progressTrack: {
-    marginTop: 14,
-    height: 12,
-    borderRadius: 20,
-    backgroundColor: "#303030",
-    overflow: "hidden",
-  },
-
-  progressFill: {
-    width: "57%",
-    height: "100%",
-    backgroundColor: colors.yellow,
+  arrowBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#292929",
   },
 });
