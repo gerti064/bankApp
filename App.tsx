@@ -6,11 +6,12 @@ import ActivationScreen from "./screens/ActivationScreen";
 import LocationsScreen from "./screens/LocationScreen";
 import ProductsScreen from "./screens/ProductsScreen";
 import MoreScreen from "./screens/MoreScreen";
+import SmartScreen from "./screens/SmartScreen";
 import FiltersScreen from "./screens/FiltersScreen";
 import BottomTabBar from "./components/BottomTabBar";
 import { colors } from "./components/theme";
 
-type Tab = "Activation" | "Locations" | "Products" | "More";
+type Tab = "Activation" | "Locations" | "Products" | "Smart" | "More";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("Activation");
@@ -28,6 +29,7 @@ export default function App() {
     }
 
     if (activeTab === "Products") return <ProductsScreen />;
+    if (activeTab === "Smart") return <SmartScreen />;
 
     return <MoreScreen />;
   };

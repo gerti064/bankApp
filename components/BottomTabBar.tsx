@@ -2,7 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors, radius } from "./theme";
 
-type Tab = "Activation" | "Locations" | "Products" | "More";
+type Tab =
+  | "Activation"
+  | "Locations"
+  | "Products"
+  | "Smart"
+  | "More";
 
 type Props = {
   active: Tab;
@@ -18,6 +23,7 @@ export default function BottomTabBar({ active, onChange }: Props) {
     { name: "Activation", icon: "home", lib: "ion" },
     { name: "Locations", icon: "location", lib: "ion" },
     { name: "Products", icon: "file-document-outline", lib: "mci" },
+    { name: "Smart", icon: "sparkles", lib: "ion" },
     { name: "More", icon: "ellipsis-horizontal-circle", lib: "ion" },
   ];
 
@@ -35,13 +41,13 @@ export default function BottomTabBar({ active, onChange }: Props) {
             {tab.lib === "ion" ? (
               <Ionicons
                 name={tab.icon as any}
-                size={32}
+                size={26}
                 color={selected ? colors.yellow : colors.white}
               />
             ) : (
               <MaterialCommunityIcons
                 name={tab.icon as any}
-                size={32}
+                size={26}
                 color={selected ? colors.yellow : colors.white}
               />
             )}
@@ -59,34 +65,38 @@ export default function BottomTabBar({ active, onChange }: Props) {
 const styles = StyleSheet.create({
   wrapper: {
     position: "absolute",
-    left: 18,
-    right: 18,
-    bottom: 26,
-    height: 86,
+    left: 12,
+    right: 12,
+    bottom: 20,
+    height: 88,
     backgroundColor: colors.tab,
     borderRadius: radius.xl,
     flexDirection: "row",
     alignItems: "center",
-    padding: 6,
+    padding: 4,
     borderWidth: 1,
     borderColor: "#2A2A2A",
   },
+
   tab: {
     flex: 1,
-    height: 74,
+    height: 78,
     borderRadius: radius.xl,
     alignItems: "center",
     justifyContent: "center",
-    gap: 3,
+    gap: 2,
   },
+
   activeTab: {
     backgroundColor: colors.activeTab,
   },
+
   label: {
     color: colors.white,
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: "600",
   },
+
   activeLabel: {
     color: colors.yellow,
   },
